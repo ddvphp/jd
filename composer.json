@@ -1,0 +1,25 @@
+{
+	"name": "ddvphp/jd",
+	"description": "jd php library",
+	"version": "0.0.1",
+	"require": {
+		"php": ">=5.3",
+		"ddvphp/ddv-exception": "0.0.*",
+		"ddvphp/ddv-util": "0.0.*",
+		"ddvphp/ddv-url": "0.0.*"
+	},
+	"require-dev": {
+	},
+	"autoload": {
+		"psr-4": {
+			"DdvPhp\\": "src/"
+		}
+	},
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "yuchonghua",
+			"email": "yuchonghua@163.com"
+		}
+	]
+}
