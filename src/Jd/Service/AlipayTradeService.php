@@ -1,5 +1,5 @@
 <?php
-namespace DdvPhp\Alipay\Service;
+namespace DdvPhp\Jd\Service;
 
 use DdvPhp\Alipay\AopSdk;
 use DdvPhp\Alipay\AopClient;
