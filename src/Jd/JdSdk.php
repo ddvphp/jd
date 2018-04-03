@@ -23,6 +23,7 @@ class JdSdk
         if (!empty($jdSdkWorkDir)) {
             JdSdk::$jdSdkWorkDir = $jdSdkWorkDir;
         }
+        define('JD_SDK_WORK_DIR',JdSdk::$jdSdkWorkDir);
         self::$libRootDir = dirname(__FILE__) . DIRECTORY_SEPARATOR . '../../org';
         self::$jdDir = self::$libRootDir . DIRECTORY_SEPARATOR . 'jd';
         self::$builderModelDir = self::$libRootDir . DIRECTORY_SEPARATOR . 'buildermodel';
@@ -45,27 +46,11 @@ class JdSdk
             try {
                 include $filePath;
             }catch (Exception $e){
-                throw new Exception('autoload jd file fail', 500, 'AUTOLOAD_ALIPAY_FILE_FAIL');
+                throw new Exception('autoload jd file fail', 500, 'AUTOLOAD_JD_FILE_FAIL');
             }
         }
     }
 
-    //转换编码
-    public static function characetToUtf8($data) {
-        if (! empty ( $data )) {
-            $fileType = mb_detect_encoding ( $data, array (
-                'UTF-8',
-                'GBK',
-                'GB2312',
-                'LATIN1',
-                'BIG5'
-            ) );
-            if ($fileType != 'UTF-8') {
-                $data = mb_convert_encoding ( $data, 'UTF-8', $fileType );
-            }
-        }
-        return $data;
-    }
 
     /**
      * 使用SDK执行接口请求
@@ -92,7 +77,7 @@ class JdSdk
      * @return JdClient
      * @throws Exception
      */
-    public static function getJdClient($config, $isMustConfig = false, $apiVersion = '1.0'){
+    public static function getJdClient($config, $isMustConfig = false){
         // 自动初始化
         JdSdk::init();
         // 把配置转驼峰key
@@ -100,27 +85,25 @@ class JdSdk
         // 如果需要判断必填配置
         if ($isMustConfig){
             // appId必填配置
-            if (empty($config['appId'])){
-                throw new Exception('appId must config', 500, 'APP_ID_MUST_CONFIG');
+            if (empty($config['appKey'])){
+                throw new Exception('appKey must config', 500, 'APP_KEY_MUST_CONFIG');
             }
             // 支付宝公钥必须配置
-            if (empty($config['jdPublicKey'])){
-                throw new Exception('jdPublicKey must config', 500, 'ALIPAY_PUBLIC_KEY_MUST_CONFIG');
+            if (empty($config['appSecret'])){
+                throw new Exception('appSecret must config', 500, 'APP_SECRET_MUST_CONFIG');
             }
             // 应用私钥必须配置
-            if (empty($config['merchantPrivateKey'])){
+            /*if (empty($config['merchantPrivateKey'])){
                 throw new Exception('merchantPrivateKey must config', 500, 'MERCHANT_PRIVATE_KEY_MUST_CONFIG');
-            }
+            }*/
         }
         // 实例化客户端
         $jd = new JdClient();
-        $jd->apiVersion = $apiVersion;
-        isset($config['gatewayUrl']) && $jd->gatewayUrl = $config['gatewayUrl'];
-        isset($config['appId']) && $jd->appId = $config['appId'];
-        isset($config['merchantPrivateKey']) && $jd->rsaPrivateKey = $config['merchantPrivateKey'];
-        isset($config['jdPublicKey']) && $jd->jdrsaPublicKey = $config['jdPublicKey'];
-        isset($config['signType']) && $jd->signType = $config['signType'];
-        isset($config['charset']) && $jd->postCharset = $config['charset'];
+
+        isset($config['serverUrl']) && $jd->serverUrl = $config['serverUrl'];
+        isset($config['appKey']) && $jd->appKey = $config['appKey'];
+        isset($config['appSecret']) && $jd->appSecret = $config['appSecret'];
+        isset($config['accessToken']) && $jd->accessToken = $config['accessToken'];
         return $jd;
     }
     public static function getHumpConfig($config){
